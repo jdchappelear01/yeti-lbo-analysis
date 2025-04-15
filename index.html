@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YETI LBO Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .analyze-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .analyze-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YETI LBO Analysis</h1>
+        <button id="analyze-btn" class="analyze-button">Start YETI Analysis</button>
+        <div id="status" class="status" style="display: none;"></div>
+        <div id="output" class="output" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('analyze-btn').addEventListener('click', async function() {
+            const button = this;
+            const statusEl = document.getElementById('status');
+            const outputEl = document.getElementById('output');
+            
+            // Disable button and show status
+            button.disabled = true;
+            button.textContent = 'Processing...';
+            statusEl.textContent = 'Running YETI analysis, please wait...';
+            statusEl.className = 'status';
+            statusEl.style.display = 'block';
+            outputEl.style.display = 'none';
+            
+            try {
+                // Make a direct call to run the Python script
+                const response = await fetch('run_analysis.py', {
+                    method: 'GET'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to run analysis script');
+                }
+                
+                const output = await response.text();
+                
+                // Show success status
+                statusEl.textContent = 'Analysis completed successfully!';
+                statusEl.className = 'status success';
+                
+                // Show output
+                outputEl.textContent = output;
+                outputEl.style.display = 'block';
+            } catch (error) {
+                // Show error status
+                statusEl.textContent = `Error: ${error.message}`;
+                statusEl.className = 'status error';
+                console.error('Error:', error);
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                button.textContent = 'Start YETI Analysis';
+            }
+        });
+    </script>
+</body>
+</html> 
