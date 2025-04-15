@@ -1,0 +1,11 @@
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+venv/
+.env
+.idea/
+frontend/node_modules/
+financial_metrics.db
+# Exclude PDF files as they're too large for GitHub
+data/sec_filings/**/*.pdf *.pdf
